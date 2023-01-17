@@ -6,7 +6,7 @@ Resources:
     Properties:
       SecurityGroups:
         - !Ref InstanceSecurityGroup    
-      KeyName: cicd.pem
+      KeyName: cicd
       ImageId: ami-0fe472d8a85bc7b0e 
       InstanceType: t3.micro
       Tags:
