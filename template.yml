@@ -10,7 +10,7 @@ Resources:
       ImageId: ami-0fe472d8a85bc7b0e 
       InstanceType: t3.micro
       Tags:
-        -Name: CICD
+        - Name: CICD
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
