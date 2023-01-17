@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ND9991 C3 L4 
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup    
+      KeyName: cicd.pem
+      ImageId: ami-0fe472d8a85bc7b0e 
+      InstanceType: t3.micro
+      Tags:
+        -Name: CICD
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0 
