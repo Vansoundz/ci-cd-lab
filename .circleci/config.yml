@@ -96,7 +96,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i temp/output.txt main.yml -vvvv
+            ansible-playbook -i temp/inventory.txt main.yml -vvvv
       - destroy_infrastructure
 workflows:
   default:
