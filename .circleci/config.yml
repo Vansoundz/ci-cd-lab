@@ -9,7 +9,6 @@ commands:
           command: |
             aws cloudformation delete-stack --stack-name alx-${CIRCLE_WORKFLOW_ID:0:5}
 
-
 jobs:
   create_infrastructure: 
     docker:
@@ -28,6 +27,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: cat inventory
       - run:
           name: Remove all existing IPs 
           command: echo [all] > inventory
@@ -35,25 +35,28 @@ jobs:
           name: Query Ip Addresses
           command: |
             aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> inventory
-  # smoke_test:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - run: apt install curl -y
-  #     - run:
-  #         name: smoke test
-  #         command: |
-  #           URL="https://blog.udacity.com/"
-  #           # Test if website exists
-  #           if curl -s --head ${URL} 
-  #           then
-  #             return 0
-  #           else
-  #             return 1
-  #           fi
+      - run: cat inventory
+  smoke_test:
+    docker:
+      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
+    steps:
+      - run: apt install curl -y
+      - run:
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
   configure_infrastructure:
     docker:
       - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
     steps:
       - checkout
       - add_ssh_keys:
@@ -73,12 +76,12 @@ workflows:
   default:
     jobs:
       - create_infrastructure
-      # - query_ips:
-      #     requires: 
-      #       - create_infrastructure
+      - query_ips:
+          requires:
+            - create_infrastructure
       - configure_infrastructure:
           requires: 
             - create_infrastructure
-      # - smoke_test
+      - smoke_test
           # requires: 
           #   - query_ips
