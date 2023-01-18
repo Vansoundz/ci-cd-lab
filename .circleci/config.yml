@@ -29,7 +29,11 @@ jobs:
       - checkout
       - run:
           name: Install Tar
-          command: apt-get install -y tar
+          command: apt install -y tar
+      - run:
+          name: Install Tar
+          command: yum install -y tar
+          when: on_fail
       - run: mkdir temp
       - run: echo [ubuntu] >> temp/inventory.txt
       - run: cat temp/inventory.txt
@@ -47,7 +51,7 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      - run: apk install curl
+      - run: apk add --update curl
       - run:
           name: Install Tar
           command: apt-get install -y tar
