@@ -46,6 +46,9 @@ jobs:
     steps:
       - run: apk install curl
       - run:
+          name: Install Tar
+          command: apt-get install -y tar
+      - run:
           name: smoke test
           command: |
             URL="https://blog.udacity.com/"
