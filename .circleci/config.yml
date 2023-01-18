@@ -19,7 +19,7 @@ jobs:
           name: Create Cloudformation Stack
           command: |
             aws cloudformation deploy \
-              --template-file template.yml \
+              --${CIRCLE_WORKFLOW_ID:0:5}late-file ${CIRCLE_WORKFLOW_ID:0:5}late.yml \
               --stack-name alx-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
   query_ips:
@@ -33,16 +33,16 @@ jobs:
       - run:
           name: Install Tar
           command: yum install -y gzip
-      - run: mkdir temp
-      - run: echo [ubuntu] >> temp/inventory.txt
-      - run: cat temp/inventory.txt
+      - run: mkdir ${CIRCLE_WORKFLOW_ID:0:5}
+      - run: echo [ubuntu] >> ${CIRCLE_WORKFLOW_ID:0:5}/inventory.txt
+      - run: cat ${CIRCLE_WORKFLOW_ID:0:5}/inventory.txt
       - run:
           name: Query Ip Addresses
           command: |
-            aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> temp/inventory.txt
-      - run: cat temp/inventory.txt
+            aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> ${CIRCLE_WORKFLOW_ID:0:5}/inventory.txt
+      - run: cat ${CIRCLE_WORKFLOW_ID:0:5}/inventory.txt
       - persist_to_workspace:
-          root: temp
+          root: ${CIRCLE_WORKFLOW_ID:0:5}
           paths:
             - inventory.txt
       - destroy_infrastructure
@@ -77,8 +77,8 @@ jobs:
           name: Install Tar
           command: yum install -y gzip
       - attach_workspace:
-          at: temp
-      - run: cat temp/inventory.txt
+          at: ${CIRCLE_WORKFLOW_ID:0:5}
+      - run: cat ${CIRCLE_WORKFLOW_ID:0:5}/inventory.txt
       - add_ssh_keys:
           fingerprints: 
             - 42:37:d3:5b:62:1e:a7:5c:0b:4b:92:d7:5f:7d:0b:de
@@ -89,14 +89,14 @@ jobs:
             yum update
       - run:
           name: Install python3
-          command: yum install -y python3.8
+          command: yum install -y python38
       - run:
           name: Install dependencies
           command: pip3 install ansible
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i temp/inventory.txt main.yml -vvvv
+            ansible-playbook -i ${CIRCLE_WORKFLOW_ID:0:5}/inventory.txt main.yml -vvvv
       - destroy_infrastructure
 workflows:
   default:
