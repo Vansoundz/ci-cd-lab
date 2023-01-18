@@ -89,7 +89,7 @@ jobs:
             yum update
       - run:
           name: Install dependencies
-          command: dnf install python3
+          command: yum install python3
       - run:
           name: Install dependencies
           command: pip3 install ansible
