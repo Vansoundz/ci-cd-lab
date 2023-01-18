@@ -27,6 +27,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install Tar
+          command: apt-get install -y tar
       - run: mkdir temp
       - run: echo [ubuntu] >> temp/inventory.txt
       - run: cat temp/inventory.txt
