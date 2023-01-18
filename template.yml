@@ -6,7 +6,7 @@ Resources:
     Properties:
       SecurityGroups:
         - !Ref InstanceSecurityGroup    
-      KeyName: cicd
+      KeyName: udacity
       ImageId: ami-06878d265978313ca 
       InstanceType: t3.micro
       Tags:

@@ -25,6 +25,22 @@ jobs:
           name: Query Ip Addresses
           command: |
             aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> inventory
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: apk add --update curl
+      - run:
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
   configure_infrastructure:
     docker:
       - image: python:3.7-alpine3.11
@@ -33,7 +49,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: 
             - 42:37:d3:5b:62:1e:a7:5c:0b:4b:92:d7:5f:7d:0b:de
-            - f9:ae:e9:09:f7:e7:30:77:02:52:c3:24:72:17:9e:58
+            - 80:3c:69:c1:d7:88:81:8f:34:6f:c7:a9:91:43:37:89
       - run:
           name: Install dependencies
           command: |
@@ -45,10 +61,11 @@ jobs:
 workflows:
   default:
     jobs:
-      # - create_infrastructure
+      - create_infrastructure
       # - query_ips:
       #     requires: 
       #       - create_infrastructure
-      - configure_infrastructure
+      # - configure_infrastructure
+      - smoke_test
           # requires: 
           #   - query_ips
