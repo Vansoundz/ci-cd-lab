@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       - run: mkdir temp
-      - run: run echo [ubuntu] >> temp/inventory.txt
+      - run: echo [ubuntu] >> temp/inventory.txt
       - run: cat temp/inventory.txt
       - run:
           name: Query Ip Addresses
@@ -39,11 +39,12 @@ jobs:
           root: temp
           paths:
             - output.txt
+      - destroy_infrastructure
   smoke_test:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      - run: apk install curl -y
+      - run: apk install curl
       - run:
           name: smoke test
           command: |
