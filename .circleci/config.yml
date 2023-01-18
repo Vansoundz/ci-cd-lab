@@ -19,7 +19,7 @@ jobs:
           name: Create Cloudformation Stack
           command: |
             aws cloudformation deploy \
-              --${CIRCLE_WORKFLOW_ID:0:5}late-file ${CIRCLE_WORKFLOW_ID:0:5}late.yml \
+              --template-file template.yml \
               --stack-name alx-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
   query_ips:
