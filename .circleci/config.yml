@@ -43,10 +43,10 @@ jobs:
 workflows:
   default:
     jobs:
-      - create_infrastructure
-      - query_ips:
-          requires: 
-            - create_infrastructure
-      - configure_infrastructure:
-          requires: 
-            - query_ips
+      # - create_infrastructure
+      # - query_ips:
+      #     requires: 
+      #       - create_infrastructure
+      - configure_infrastructure
+          # requires: 
+          #   - query_ips
