@@ -61,6 +61,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install Tar
+          command: apt-get install -y tar
       - attach_workspace:
           at: temp
       - run: cat temp/inventory.txt
