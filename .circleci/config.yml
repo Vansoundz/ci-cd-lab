@@ -30,7 +30,6 @@ jobs:
       - run:
           name: Install Tar
           command: yum install -y tar
-          when: on_fail
       - run: mkdir temp
       - run: echo [ubuntu] >> temp/inventory.txt
       - run: cat temp/inventory.txt
@@ -51,7 +50,7 @@ jobs:
       - run: apk add --update curl
       - run:
           name: Install Tar
-          command: yum install -y tar
+          command: apk add --update tar
       - run:
           name: smoke test
           command: |
