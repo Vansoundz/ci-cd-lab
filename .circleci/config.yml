@@ -88,8 +88,8 @@ jobs:
           command: |
             yum update
       - run:
-          name: Install dependencies
-          command: yum install python3
+          name: Install python3
+          command: yum install -y python3
       - run:
           name: Install dependencies
           command: pip3 install ansible
