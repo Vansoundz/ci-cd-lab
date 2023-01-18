@@ -29,9 +29,6 @@ jobs:
       - checkout
       - run:
           name: Install Tar
-          command: apt install -y tar
-      - run:
-          name: Install Tar
           command: yum install -y tar
           when: on_fail
       - run: mkdir temp
@@ -54,7 +51,7 @@ jobs:
       - run: apk add --update curl
       - run:
           name: Install Tar
-          command: apt-get install -y tar
+          command: yum install -y tar
       - run:
           name: smoke test
           command: |
@@ -73,7 +70,7 @@ jobs:
       - checkout
       - run:
           name: Install Tar
-          command: apt-get install -y tar
+          command: yum install -y tar
       - attach_workspace:
           at: temp
       - run: cat temp/inventory.txt
