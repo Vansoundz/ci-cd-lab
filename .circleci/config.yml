@@ -1,5 +1,15 @@
 version: 2.1
 
+commands:
+  destroy_infrastructure:
+    steps:
+      - run:
+          name: Delete Stack
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name alx-${CIRCLE_WORKFLOW_ID:0:5}
+
+
 jobs:
   create_infrastructure: 
     docker:
@@ -11,7 +21,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --stack-name alx-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
   query_ips:
     docker:
@@ -27,7 +37,7 @@ jobs:
             aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> inventory
   smoke_test:
     docker:
-      - image: alpine:latest
+      - image: amazon/aws-cli
     steps:
       - run: apk add --update curl
       - run:
@@ -58,6 +68,7 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook -i inventory main.yml -vvvv
+      - destroy_infrastructure
 workflows:
   default:
     jobs:
