@@ -2,7 +2,6 @@ version: 2.1
 
 commands:
   destroy_infrastructure:
-
     steps:
       - run:
           name: Delete Stack
@@ -28,15 +27,18 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: cat inventory
-      - run:
-          name: Remove all existing IPs 
-          command: echo [all] > inventory
+      - run: mkdir temp
+      - run: run echo [ubuntu] >> temp/inventory.txt
+      - run: cat temp/inventory.txt
       - run:
           name: Query Ip Addresses
           command: |
-            aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> inventory
-      - run: cat inventory
+            aws ec2 describe-instances --query Reservations[*].Instances[*].PublicIpAddress --output text >> temp/inventory.txt
+      - run: cat temp/inventory.txt
+      - persist_to_workspace:
+          root: temp
+          paths:
+            - output.txt
   smoke_test:
     docker:
       - image: amazon/aws-cli
@@ -60,6 +62,9 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - attach_workspace:
+          at: temp
+      - run: cat temp/inventory.txt
       - add_ssh_keys:
           fingerprints: 
             - 42:37:d3:5b:62:1e:a7:5c:0b:4b:92:d7:5f:7d:0b:de
@@ -71,7 +76,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i inventory main.yml -vvvv
+            ansible-playbook -i temp/output.txt main.yml -vvvv
       - destroy_infrastructure
 workflows:
   default:
