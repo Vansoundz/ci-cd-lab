@@ -61,11 +61,11 @@ jobs:
 workflows:
   default:
     jobs:
-      - create_infrastructure
+      # - create_infrastructure
       # - query_ips:
       #     requires: 
       #       - create_infrastructure
-      # - configure_infrastructure
+      - configure_infrastructure
       - smoke_test
           # requires: 
           #   - query_ips
